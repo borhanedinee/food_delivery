@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/data/models/user_model.dart';
 import 'package:food_delivery/main.dart';
+import 'package:food_delivery/presentaion/controllers/auth_controller.dart';
 import 'package:food_delivery/utils/app_colors.dart';
+import 'package:get/get.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -47,8 +50,8 @@ class ProfileScreen extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                const Text(
-                  'Rania Alsharif',
+                Text(
+                  currentUser!.name,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -79,6 +82,9 @@ class ProfileScreen extends StatelessWidget {
                       {
                         'icon': Icons.logout,
                         'title': 'Logout',
+                        'onTap': () {
+                          Get.find<AuthController>().logout();
+                        },
                       },
                     ];
 
@@ -89,7 +95,7 @@ class ProfileScreen extends StatelessWidget {
                           size: 30,
                         ),
                         title: tilesInfos[index]['title'],
-                        onTap: () {});
+                        onTap: tilesInfos[index]['onTap'] ?? () {});
                   },
                   separatorBuilder: (context, index) => Divider(),
                   itemCount: 4,

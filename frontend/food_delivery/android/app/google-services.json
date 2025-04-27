@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "221472619353",
+    "project_id": "usthb-app-eb8ae",
+    "storage_bucket": "usthb-app-eb8ae.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:221472619353:android:7dcb10c5adc3370699ea48",
+        "android_client_info": {
+          "package_name": "com.example.food_delivery"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClJ_xHhEYCXnWOHicAFuQkL1VcOkj_U7o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

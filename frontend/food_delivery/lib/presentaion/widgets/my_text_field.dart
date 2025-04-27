@@ -9,19 +9,31 @@ class MyTextField extends StatelessWidget {
       this.maxLines,
       required this.hintText,
       this.fillColor,
-      this.hintColor});
+      this.hintColor,
+      this.controller,
+      this.obscureText,
+      this.keyboardType});
 
+  final bool? obscureText;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final int? maxLines;
   final String hintText;
   final Color? fillColor;
   final Color? hintColor;
-
+  final TextEditingController? controller;
+  final TextInputType? keyboardType;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      maxLines: maxLines,
+      keyboardType: keyboardType,
+      obscureText: obscureText ?? false,
+      controller: controller,
+      maxLines: obscureText == null
+          ? maxLines
+          : obscureText!
+              ? 1
+              : maxLines,
       decoration: InputDecoration(
         fillColor: fillColor ?? AppColors.whiteColor.withValues(alpha: .05),
         filled: true,

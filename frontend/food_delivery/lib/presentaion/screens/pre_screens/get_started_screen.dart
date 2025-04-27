@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/main.dart';
-import 'package:food_delivery/presentaion/screens/login_screen.dart';
+import 'package:food_delivery/presentaion/screens/pre_screens/login_screen.dart';
 import 'package:food_delivery/utils/app_colors.dart';
 
 class GetStartedScreen extends StatelessWidget {

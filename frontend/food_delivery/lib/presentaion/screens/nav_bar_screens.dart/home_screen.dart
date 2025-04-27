@@ -1,85 +1,178 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/data/models/product_model.dart';
+import 'package:food_delivery/data/models/user_model.dart';
 import 'package:food_delivery/main.dart';
+import 'package:food_delivery/presentaion/controllers/products_controller.dart';
+import 'package:food_delivery/presentaion/screens/category_products_screen.dart';
+import 'package:food_delivery/presentaion/widgets/home_screen/best_product_item.dart';
 import 'package:food_delivery/presentaion/widgets/my_text_field.dart';
+import 'package:food_delivery/presentaion/widgets/product_card.dart';
 import 'package:food_delivery/utils/app_colors.dart';
+import 'package:get/get.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    Get.find<ProductController>().fetchAllProducts();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.menu,
-              color: Colors.white,
-            ),
-          ),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
-              Icon(
-                Icons.location_on,
-                color: Colors.white,
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Text(
-                'Algiers, Algeria',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Icon(
-                Icons.arrow_drop_down,
-                color: Colors.white,
-              ),
-            ],
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.notifications,
-                color: Colors.white,
-              ),
-            ),
-          ],
-          backgroundColor: AppColors.primaryColor,
-          elevation: 0,
-        ),
+        appBar: _buildAppBar(),
         body: SizedBox(
           height: size.height,
           width: size.width,
-          child: Column(
-            children: [
-              _buildSearchBar(),
-              SizedBox(
-                height: 20,
-              ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildSearchBar(),
+                SizedBox(
+                  height: 20,
+                ),
+                GetBuilder<ProductController>(
+                  builder: (controller) => controller.isLoading
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : Column(
+                          children: [
+                            // Menu
 
-              // Menu
-              _buzildMenu(context),
-              const SizedBox(
-                height: 20,
-              ),
-              // Popular Products
-              _buildPopularProducts(context),
-            ],
+                            _buzildMenu(context),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            // Popular Products
+                            _buildPopularProducts(context),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            // build best products
+                            _buildBestProducts(context),
+                            const SizedBox(
+                              height: 70,
+                            ),
+                          ],
+                        ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  Column _buildBestProducts(BuildContext context) {
+    final controller = Get.find<ProductController>();
+    final bestProducts = controller.allProducts.take(6).toList();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Best Products',
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              Text(
+                'View all',
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: AppColors.primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+        SizedBox(
+          height: size.height * 0.4, // Responsive height
+          width: double.infinity, // Full width
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 8), // Side padding
+            itemBuilder: (context, index) {
+              ProductModel product = bestProducts[index];
+              return SizedBox(
+                width: MediaQuery.of(context).size.width *
+                    0.5, // Responsive item width
+                child: BestProductItem(product: product),
+              );
+            },
+            separatorBuilder: (context, index) =>
+                const SizedBox(width: 12), // Consistent spacing
+            itemCount: bestProducts.length,
+          ),
+        ),
+      ],
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      leading: IconButton(
+        onPressed: () {},
+        icon: const Icon(
+          Icons.menu,
+          color: Colors.white,
+        ),
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.location_on,
+            color: Colors.white,
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Text(
+            currentUser!.address ?? 'Algiers, Algeria',
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Icon(
+            Icons.arrow_drop_down,
+            color: Colors.white,
+          ),
+        ],
+      ),
+      actions: [
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(
+            Icons.notifications,
+            color: Colors.white,
+          ),
+        ),
+      ],
+      backgroundColor: AppColors.primaryColor,
+      elevation: 0,
     );
   }
 
@@ -127,7 +220,7 @@ class HomeScreen extends StatelessWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(20),
                       child: Image.asset(popularProductAsset,
-                          width: 220, height: 160, fit: BoxFit.cover),
+                          width: 220, height: 160, fit: BoxFit.fill),
                     ),
                     Positioned(
                       top: 10,
@@ -194,65 +287,92 @@ class HomeScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Column(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: Image.asset(
-                      'assets/images/crepe.png',
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
+              GestureDetector(
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const CategoryProductsScreen(
+                      categoryTitle: 'Crepes',
                     ),
                   ),
-                  Text(
-                    'Crepes',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: AppColors.primaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ],
+                ),
+                child: Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Image.asset(
+                        'assets/images/crepe_simple.png',
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                    Text(
+                      'Crepes',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ],
+                ),
               ),
-              Column(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: Image.asset(
-                      'assets/images/pizza.png',
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
+              GestureDetector(
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const CategoryProductsScreen(
+                      categoryTitle: 'Pizzas',
                     ),
                   ),
-                  Text(
-                    'Pizzas',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: AppColors.primaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ],
+                ),
+                child: Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Image.asset(
+                        'assets/images/pizza.png',
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                    Text(
+                      'Pizzas',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ],
+                ),
               ),
-              Column(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: Image.asset(
-                      'assets/images/juice.png',
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
+              GestureDetector(
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const CategoryProductsScreen(
+                      categoryTitle: 'Juices',
                     ),
                   ),
-                  Text(
-                    'Juices',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: AppColors.primaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ],
+                ),
+                child: Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Image.asset(
+                        'assets/images/juice.png',
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                    Text(
+                      'Juices',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ],
+                ),
               ),
             ],
           )
@@ -300,9 +420,9 @@ class HomeScreen extends StatelessWidget {
               hintText: 'Search products...',
               prefixIcon: const Icon(
                 LucideIcons.search,
-                color: Colors.white,
+                color: Colors.black,
               ),
-              fillColor: AppColors.blackColor,
+              fillColor: AppColors.whiteColor,
             ),
           ),
           const SizedBox(
