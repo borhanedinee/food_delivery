@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery/utils/app_colors.dart';
 
 class MyTextField extends StatelessWidget {
-  MyTextField(
+  const MyTextField(
       {super.key,
       this.prefixIcon,
       this.suffixIcon,
@@ -12,9 +12,12 @@ class MyTextField extends StatelessWidget {
       this.hintColor,
       this.controller,
       this.obscureText,
-      this.keyboardType});
-
+      this.keyboardType,
+      this.onChanged,
+      this.enabled});
+  final ValueChanged<String>? onChanged;
   final bool? obscureText;
+  final bool? enabled;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final int? maxLines;
@@ -26,6 +29,8 @@ class MyTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      enabled: enabled,
+      onChanged: onChanged,
       keyboardType: keyboardType,
       obscureText: obscureText ?? false,
       controller: controller,

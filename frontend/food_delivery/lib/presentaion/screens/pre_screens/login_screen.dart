@@ -65,6 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 32),
                   MyTextField(
+                    keyboardType: TextInputType.emailAddress,
                     controller: emailController,
                     fillColor: AppColors.whiteColor,
                     hintText: 'Email',
@@ -72,6 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 16),
                   MyTextField(
+                    keyboardType: TextInputType.visiblePassword,
                     controller: passwordController,
                     obscureText: isPasswordHidden,
                     fillColor: AppColors.whiteColor,

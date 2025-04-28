@@ -41,7 +41,7 @@ class GetStartedScreen extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         // Navigate to the login screen
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder: (context) => LoginScreen(),

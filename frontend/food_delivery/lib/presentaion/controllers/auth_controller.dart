@@ -17,6 +17,7 @@ class AuthController extends GetxController {
     String name,
     String phone,
     String address,
+    String gender,
   ) async {
     if (!_isValidEmail(email)) {
       Get.snackbar('Error', 'Invalid email format');
@@ -35,6 +36,7 @@ class AuthController extends GetxController {
         'email': email,
         'phoneNumber': phone,
         'address': address,
+        'gender': gender,
         'createdAt': Timestamp.now(),
       });
       final data = await _firestore

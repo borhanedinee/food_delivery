@@ -7,6 +7,7 @@ class ProductController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<ProductModel> allProducts = <ProductModel>[]; // All fetched products
   List<ProductModel> filteredProducts = <ProductModel>[]; // Filtered products
+  List<ProductModel> popularProducts = <ProductModel>[]; // Filtered products
   final TextEditingController searchController = TextEditingController();
   var isLoading = false;
 
@@ -51,5 +52,13 @@ class ProductController extends GetxController {
           .toList();
     }
     return filteredProducts;
+  }
+
+  // Filter products locally by category
+  void filterPopularProducts() {
+    popularProducts = allProducts
+        .where((product) => product.category.toLowerCase().contains('popular'))
+        .toList();
+    update();
   }
 }

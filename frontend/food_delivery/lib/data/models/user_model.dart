@@ -4,7 +4,8 @@ class UserModel {
   final String uid;
   final String email;
   final String name;
-  final DateTime createdAt;
+  final String gender;
+  final DateTime? createdAt;
   final String? address; // Example app-specific field
   final String? phoneNumber; // Example app-specific field
 
@@ -12,7 +13,8 @@ class UserModel {
     required this.uid,
     required this.email,
     required this.name,
-    required this.createdAt,
+    required this.gender,
+    this.createdAt,
     this.address,
     this.phoneNumber,
   });
@@ -23,6 +25,7 @@ class UserModel {
       uid: uid,
       email: data['email'] ?? '',
       name: data['name'] ?? '',
+      gender: data['gender'] ?? '',
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       address: data['address'],
       phoneNumber: data['phoneNumber'],
@@ -34,7 +37,8 @@ class UserModel {
     return {
       'email': email,
       'name': name,
-      'createdAt': Timestamp.fromDate(createdAt),
+      'gender': gender,
+      'createdAt': Timestamp.fromDate(createdAt ?? DateTime.now()),
       if (address != null) 'address': address,
       if (phoneNumber != null) 'phoneNumber': phoneNumber,
     };

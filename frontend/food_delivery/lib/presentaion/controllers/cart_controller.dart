@@ -106,12 +106,16 @@ class CartController extends GetxController {
     }
   }
 
+  bool isPlacingOrderLoading = false;
   Future<void> placeOrder(String userId) async {
     try {
       if (cartItems.isEmpty) {
         Get.snackbar('Error', 'Cart is empty');
         return;
       }
+      isPlacingOrderLoading = true;
+      update();
+
       final orderId = _firestore.collection('orders').doc().id;
       final total =
           cartItems.fold(0.0, (sum, item) => sum + item.price * item.quantity);
@@ -137,6 +141,9 @@ class CartController extends GetxController {
       Get.snackbar('Success', 'Order placed successfully');
     } catch (e) {
       Get.snackbar('Error', 'Failed to place order: $e');
+    } finally {
+      isPlacingOrderLoading = false;
+      update();
     }
   }
 }

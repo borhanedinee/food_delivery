@@ -340,36 +340,42 @@ class BagScreen extends StatelessWidget {
       BuildContext context, CartController cartController, String? userId) {
     return GetBuilder<CartController>(
       builder: (controller) => Container(
+        height: 60,
         margin: const EdgeInsets.symmetric(horizontal: 16),
         width: double.infinity,
-        child: ElevatedButton.icon(
-          onPressed: () {
-            if (userId == null) {
-              Get.snackbar('Error', 'Please log in to checkout');
-              return;
-            }
-            if (cartController.cartItems.isEmpty) return;
-            cartController.placeOrder(userId);
-          },
-          icon: const Icon(Icons.check_circle, color: AppColors.whiteColor),
-          label: Text(
-            'Checkout',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: AppColors.whiteColor,
-                  fontWeight: FontWeight.bold,
+        child: controller.isPlacingOrderLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : ElevatedButton.icon(
+                onPressed: () {
+                  if (userId == null) {
+                    Get.snackbar('Error', 'Please log in to checkout');
+                    return;
+                  }
+                  if (cartController.cartItems.isEmpty) return;
+                  cartController.placeOrder(userId);
+                },
+                icon:
+                    const Icon(Icons.check_circle, color: AppColors.whiteColor),
+                label: Text(
+                  'Checkout',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: AppColors.whiteColor,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
-          ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: cartController.cartItems.isEmpty
-                ? Colors.grey
-                : AppColors.primaryColor,
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            elevation: 2,
-          ),
-        ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: cartController.cartItems.isEmpty
+                      ? Colors.grey
+                      : AppColors.primaryColor,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 2,
+                ),
+              ),
       ),
     );
   }

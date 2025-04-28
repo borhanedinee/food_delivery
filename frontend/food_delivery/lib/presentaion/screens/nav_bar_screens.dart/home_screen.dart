@@ -1,15 +1,22 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:food_delivery/data/models/product_model.dart';
 import 'package:food_delivery/data/models/user_model.dart';
 import 'package:food_delivery/main.dart';
 import 'package:food_delivery/presentaion/controllers/products_controller.dart';
-import 'package:food_delivery/presentaion/screens/category_products_screen.dart';
+import 'package:food_delivery/presentaion/controllers/profile_controller.dart';
+import 'package:food_delivery/presentaion/screens/menu_screen.dart';
+import 'package:food_delivery/presentaion/screens/product_details_sreen.dart';
 import 'package:food_delivery/presentaion/widgets/home_screen/best_product_item.dart';
 import 'package:food_delivery/presentaion/widgets/my_text_field.dart';
 import 'package:food_delivery/presentaion/widgets/product_card.dart';
 import 'package:food_delivery/utils/app_colors.dart';
+import 'package:food_delivery/utils/dialogs/location_dialog.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -22,6 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     Get.find<ProductController>().fetchAllProducts();
+    Get.find<ProductController>().filterPopularProducts();
+
     super.initState();
   }
 
@@ -48,7 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       : Column(
                           children: [
                             // Menu
-
                             _buzildMenu(context),
                             const SizedBox(
                               height: 20,
@@ -134,33 +142,44 @@ class _HomeScreenState extends State<HomeScreen> {
           color: Colors.white,
         ),
       ),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.location_on,
-            color: Colors.white,
+      title: GetBuilder<ProfileController>(
+        builder: (controller) => GestureDetector(
+          onTap: () {
+            showLocationSearchDialog(context);
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.location_on,
+                color: Colors.white,
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              SizedBox(
+                width: 150,
+                child: Text(
+                  currentUser!.address ?? 'Algiers, Algeria',
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Icon(
+                Icons.arrow_drop_down,
+                color: Colors.white,
+              ),
+            ],
           ),
-          SizedBox(
-            width: 5,
-          ),
-          Text(
-            currentUser!.address ?? 'Algiers, Algeria',
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-          SizedBox(
-            width: 5,
-          ),
-          Icon(
-            Icons.arrow_drop_down,
-            color: Colors.white,
-          ),
-        ],
+        ),
       ),
       actions: [
         IconButton(
@@ -176,85 +195,94 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Column _buildPopularProducts(BuildContext context) {
-    List<String> popularProducts = [
-      'assets/images/snickers.png',
-      'assets/images/crepe_dubai.png',
-    ];
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Popular Products',
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              Text(
-                'View all',
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                      color: AppColors.primaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        SizedBox(
-          height: 200,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) {
-              String popularProductAsset = popularProducts[index];
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.asset(popularProductAsset,
-                          width: 220, height: 160, fit: BoxFit.fill),
-                    ),
-                    Positioned(
-                      top: 10,
-                      right: 10,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.blackColor.withOpacity(.2),
-                              blurRadius: 5,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        child: IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.favorite,
-                            )),
+  Widget _buildPopularProducts(BuildContext context) {
+    return GetBuilder<ProductController>(
+      builder: (controller) => Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Popular Products',
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
                       ),
-                    )
-                  ],
                 ),
-              );
-            },
-            separatorBuilder: (context, index) => SizedBox(
-              width: 4,
+                Text(
+                  'View all',
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        color: AppColors.primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
             ),
-            itemCount: popularProducts.length,
           ),
-        )
-      ],
+          const SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+            height: 200,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: controller.popularProducts.length,
+              itemBuilder: (context, index) {
+                ProductModel popularProduct = controller.popularProducts[index];
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Stack(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ProductDetailsScreen(
+                                product: popularProduct,
+                              ),
+                            ),
+                          );
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.network(popularProduct.avatar,
+                              width: 220, height: 160, fit: BoxFit.fill),
+                        ),
+                      ),
+                      Positioned(
+                        top: 10,
+                        right: 10,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.whiteColor,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.blackColor.withOpacity(.2),
+                                blurRadius: 5,
+                                offset: const Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.favorite,
+                              )),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
+              separatorBuilder: (context, index) => SizedBox(
+                width: 4,
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -290,7 +318,7 @@ class _HomeScreenState extends State<HomeScreen> {
               GestureDetector(
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const CategoryProductsScreen(
+                    builder: (context) => const MenuScreen(
                       categoryTitle: 'Crepes',
                     ),
                   ),
@@ -319,7 +347,7 @@ class _HomeScreenState extends State<HomeScreen> {
               GestureDetector(
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const CategoryProductsScreen(
+                    builder: (context) => const MenuScreen(
                       categoryTitle: 'Pizzas',
                     ),
                   ),
@@ -348,7 +376,7 @@ class _HomeScreenState extends State<HomeScreen> {
               GestureDetector(
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const CategoryProductsScreen(
+                    builder: (context) => const MenuScreen(
                       categoryTitle: 'Juices',
                     ),
                   ),

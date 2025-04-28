@@ -29,10 +29,8 @@ class ProductCard extends StatelessWidget {
               );
       },
       child: Container(
-        height: 200,
-        width: 150,
         decoration: BoxDecoration(
-          color: AppColors.primaryColor.withValues(alpha: .5),
+          color: AppColors.primaryColor.withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Stack(
@@ -40,37 +38,42 @@ class ProductCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Image Section
                 Container(
                   decoration: BoxDecoration(
                     color: AppColors.primaryColor,
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20),
                     ),
                   ),
-                  height: 200 * .9,
-                  width: 180,
+                  height: MediaQuery.of(context).size.height *
+                      0.15, // Responsive height
+                  width: double.infinity, // Take full width of the card
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(20)),
                     child: Image.network(
                       product.avatar,
-                      fit: BoxFit.fill,
+                      fit: BoxFit.cover, // Use cover to prevent stretching
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        color: Colors.grey[300],
+                        child: const Icon(Icons.broken_image),
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 8),
+                // Product Name and Price
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Row(
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: 110,
-                            child: Text(
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
                               product.name,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -82,34 +85,32 @@ class ProductCard extends StatelessWidget {
                                     fontWeight: FontWeight.bold,
                                   ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 5,
+                            const SizedBox(height: 4),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 5,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryColor
+                                    .withValues(alpha: 0.3),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                '${product.price.toInt()} DA',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                      color: AppColors.darkerPrimaryColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
                             ),
-                            decoration: BoxDecoration(
-                              color:
-                                  AppColors.primaryColor.withValues(alpha: .2),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Text(
-                              '${product.price.toInt()} DA',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                    color: AppColors.darkerPrimaryColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                      const Spacer(),
+                      const SizedBox(width: 8),
                       Icon(
                         Icons.navigate_next,
                         color: AppColors.primaryColor,
@@ -118,9 +119,8 @@ class ProductCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 5,
-                ),
+                const SizedBox(height: 4),
+                // Rating
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Row(
@@ -130,9 +130,7 @@ class ProductCard extends StatelessWidget {
                         color: AppColors.primaryColor,
                         size: 20,
                       ),
-                      const SizedBox(
-                        width: 5,
-                      ),
+                      const SizedBox(width: 4),
                       Text(
                         product.rating.toString(),
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -143,10 +141,10 @@ class ProductCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Spacer(),
-                // ORDER BUTTON
+                const Spacer(),
+                // Order Button
                 Container(
-                  alignment: Alignment.center,
+                  width: double.infinity, // Take full width
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                   child: ElevatedButton(
@@ -170,6 +168,7 @@ class ProductCard extends StatelessWidget {
                 ),
               ],
             ),
+            // Favorite Icon
             Positioned(
               top: 10,
               right: 10,
@@ -179,19 +178,18 @@ class ProductCard extends StatelessWidget {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.blackColor.withOpacity(.2),
+                      color: AppColors.blackColor.withOpacity(0.2),
                       blurRadius: 5,
                       offset: const Offset(0, 5),
                     ),
                   ],
                 ),
                 child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.favorite,
-                    )),
+                  onPressed: () {},
+                  icon: const Icon(Icons.favorite),
+                ),
               ),
-            )
+            ),
           ],
         ),
       ),
