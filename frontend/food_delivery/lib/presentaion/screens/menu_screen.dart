@@ -39,6 +39,7 @@ class _MenuScreenState extends State<MenuScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -48,6 +49,7 @@ class _MenuScreenState extends State<MenuScreen> {
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   color: AppColors.whiteColor,
                   fontWeight: FontWeight.bold,
+                  fontSize: screenSize.width * 0.05, // Responsive font size
                 ),
           ),
           centerTitle: true,
@@ -55,56 +57,68 @@ class _MenuScreenState extends State<MenuScreen> {
         backgroundColor: Colors.white,
         body: Column(
           children: [
-            _buildSearchBar(),
+            _buildSearchBar(context, screenSize),
             Expanded(
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Vertical Categories on the Left
                   Container(
+                    height: screenSize.height * .7,
+                    width: screenSize.width * 0.1, // Responsive width
                     decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(100),
-                          bottomRight: Radius.circular(100),
-                        )),
-                    width: 60,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: categories
-                          .map((category) => GestureDetector(
-                                onTap: () => _onCategoryTap(category),
-                                child: Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 20),
-                                  child: RotatedBox(
-                                    quarterTurns:
-                                        3, // Rotate text 90 degrees counterclockwise
-                                    child: AnimatedContainer(
-                                      duration: Durations.extralong1,
+                      color: Colors.grey[300],
+                      borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(100),
+                        bottomRight: Radius.circular(100),
+                      ),
+                    ),
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: categories
+                              .map((category) => GestureDetector(
+                                    onTap: () => _onCategoryTap(category),
+                                    child: Container(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: 16, vertical: 8),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(30),
-                                        color: selectedCategory == category
-                                            ? AppColors.primaryColor
-                                                .withValues(alpha: .3)
-                                            : null,
+                                        vertical: screenSize.height * 0.02,
                                       ),
-                                      child: Text(
-                                        category.toUpperCase(),
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: selectedCategory == category
-                                              ? AppColors.primaryColor
-                                              : Colors.black,
-                                          fontSize: 14,
+                                      child: RotatedBox(
+                                        quarterTurns: 3,
+                                        child: AnimatedContainer(
+                                          duration: Durations.extralong1,
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: screenSize.width * 0.04,
+                                            vertical: screenSize.height * 0.005,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            color: selectedCategory == category
+                                                ? AppColors.primaryColor
+                                                    .withValues(alpha: 0.3)
+                                                : null,
+                                          ),
+                                          child: Text(
+                                            category.toUpperCase(),
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color:
+                                                  selectedCategory == category
+                                                      ? AppColors.primaryColor
+                                                      : Colors.black,
+                                              fontSize: screenSize.width *
+                                                  0.028, // Responsive
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              ))
-                          .toList(),
+                                  ))
+                              .toList(),
+                        );
+                      },
                     ),
                   ),
                   // Product Grid on the Right
@@ -116,11 +130,15 @@ class _MenuScreenState extends State<MenuScreen> {
                               ? Center(
                                   child: Text(
                                     '$selectedCategory Products is empty',
-                                    style:
-                                        Theme.of(context).textTheme.titleMedium,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(
+                                          fontSize: screenSize.width * 0.04,
+                                        ),
                                   ),
                                 )
-                              : buildGridView(controller),
+                              : buildGridView(controller, screenSize),
                     ),
                   ),
                 ],
@@ -133,11 +151,12 @@ class _MenuScreenState extends State<MenuScreen> {
             Get.to(() => const BagScreen());
           },
           backgroundColor: AppColors.primaryColor,
-          child: const Text(
+          child: Text(
             'Order',
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
+              fontSize: screenSize.width * 0.04, // Responsive
             ),
           ),
         ),
@@ -145,16 +164,16 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  Widget buildGridView(CategoryProductsController controller) {
+  Widget buildGridView(CategoryProductsController controller, Size screenSize) {
     List<ProductModel> products = controller.products;
 
     return GridView.builder(
-      padding: const EdgeInsets.all(12),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // 2 items per row
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-        childAspectRatio: 0.5, // Adjusted to match the image
+      padding: EdgeInsets.all(screenSize.width * 0.03),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: screenSize.width * 0.03,
+        mainAxisSpacing: screenSize.width * 0.03,
+        childAspectRatio: 0.65, // Adjusted for smaller ProductCard
       ),
       itemCount: products.length,
       itemBuilder: (context, index) {
@@ -164,9 +183,12 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  Widget _buildSearchBar() {
+  Widget _buildSearchBar(BuildContext context, Size screenSize) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: EdgeInsets.symmetric(
+        horizontal: screenSize.width * 0.04,
+        vertical: screenSize.height * 0.01,
+      ),
       child: Row(
         children: [
           Expanded(
@@ -185,9 +207,10 @@ class _MenuScreenState extends State<MenuScreen> {
               ),
               child: MyTextField(
                 hintText: 'Search',
-                prefixIcon: const Icon(
+                prefixIcon: Icon(
                   LucideIcons.search,
                   color: Colors.black,
+                  size: screenSize.width * 0.06, // Responsive icon size
                 ),
                 fillColor: Colors.white,
                 onChanged: (value) {
@@ -196,9 +219,9 @@ class _MenuScreenState extends State<MenuScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 10),
+          SizedBox(width: screenSize.width * 0.03),
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.all(screenSize.width * 0.025),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
@@ -211,9 +234,10 @@ class _MenuScreenState extends State<MenuScreen> {
                 ),
               ],
             ),
-            child: const Icon(
+            child: Icon(
               LucideIcons.slidersHorizontal,
               color: Colors.black,
+              size: screenSize.width * 0.06, // Responsive icon size
             ),
           ),
         ],

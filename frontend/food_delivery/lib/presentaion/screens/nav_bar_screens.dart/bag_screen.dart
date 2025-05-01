@@ -14,6 +14,8 @@ class BagScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cartController = Get.find<CartController>();
     final authController = Get.find<AuthController>();
+    final screenSize = MediaQuery.of(context).size;
+    final fontScale = screenSize.width / 400; // Base scaling factor
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
@@ -21,9 +23,10 @@ class BagScreen extends StatelessWidget {
         backgroundColor: AppColors.primaryColor,
         title: Text(
           'Your Cart',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: AppColors.whiteColor,
                 fontWeight: FontWeight.bold,
+                fontSize: 16 * fontScale,
               ),
         ),
         centerTitle: true,
@@ -35,10 +38,13 @@ class BagScreen extends StatelessWidget {
               controller.cartItems.isEmpty
                   ? Center(
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 200),
+                        padding: EdgeInsets.only(top: screenSize.height * 0.2),
                         child: Text(
                           'Your cart is empty',
-                          style: Theme.of(context).textTheme.titleLarge,
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontSize: 16 * fontScale,
+                                  ),
                         ),
                       ),
                     )
@@ -46,34 +52,61 @@ class BagScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildCartItems(
-                            context, cartController, currentUser?.uid),
+                          context,
+                          cartController,
+                          currentUser?.uid,
+                          screenSize,
+                          fontScale,
+                        ),
                         _buildTotalAndUserInfoBox(
-                            context, cartController, currentUser),
-                        const SizedBox(
-                            height: 100), // Space for checkout button
+                          context,
+                          cartController,
+                          currentUser,
+                          screenSize,
+                          fontScale,
+                        ),
+                        SizedBox(
+                            height: screenSize.height *
+                                0.12), // Space for checkout button
                       ],
                     ),
             ],
           ),
         ),
       ),
-      floatingActionButton:
-          _buildCheckoutButton(context, cartController, currentUser?.uid),
+      floatingActionButton: _buildCheckoutButton(
+        context,
+        cartController,
+        currentUser?.uid,
+        screenSize,
+        fontScale,
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
   Widget _buildCartItems(
-      BuildContext context, CartController cartController, String? userId) {
+    BuildContext context,
+    CartController cartController,
+    String? userId,
+    Size screenSize,
+    double fontScale,
+  ) {
     return Container(
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(screenSize.width * 0.04),
       child: GetBuilder<CartController>(
         builder: (controller) => Column(
           children: controller.cartItems
               .asMap()
               .entries
-              .map((entry) =>
-                  _buildCartItemCard(context, controller, userId, entry.value))
+              .map((entry) => _buildCartItemCard(
+                    context,
+                    controller,
+                    userId,
+                    entry.value,
+                    screenSize,
+                    fontScale,
+                  ))
               .toList(),
         ),
       ),
@@ -85,17 +118,19 @@ class BagScreen extends StatelessWidget {
     CartController cartController,
     String? userId,
     CartItem item,
+    Size screenSize,
+    double fontScale,
   ) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(bottom: screenSize.height * 0.015),
+      padding: EdgeInsets.all(screenSize.width * 0.03),
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
+            blurRadius: 5,
             offset: const Offset(0, 2),
           ),
         ],
@@ -103,71 +138,87 @@ class BagScreen extends StatelessWidget {
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(10),
             child: Image.network(
               item.avatar,
-              width: 80,
-              height: 80,
+              width: screenSize.width * 0.18, // Smaller, responsive size
+              height: screenSize.width * 0.18,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) => Container(
-                width: 80,
-                height: 80,
+                width: screenSize.width * 0.18,
+                height: screenSize.width * 0.18,
                 color: Colors.grey[300],
-                child: const Icon(Icons.broken_image, size: 40),
+                child: Icon(
+                  Icons.broken_image,
+                  size: 30 * fontScale,
+                ),
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: screenSize.width * 0.03),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   item.name,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: AppColors.blackColor,
+                        fontSize: 14 * fontScale,
                       ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: screenSize.height * 0.005),
                 Text(
                   '${item.price.toInt()} DA',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AppColors.primaryColor,
                         fontWeight: FontWeight.bold,
+                        fontSize: 12 * fontScale,
                       ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: screenSize.height * 0.01),
                 Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.remove_circle,
-                          color: AppColors.primaryColor),
+                      icon: Icon(
+                        Icons.remove_circle,
+                        color: AppColors.primaryColor,
+                        size: 20 * fontScale,
+                      ),
                       onPressed: () {
                         if (userId != null) {
                           cartController.updateQuantity(
                               userId, item.productId, item.quantity - 1);
                         }
                       },
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
                     ),
                     Text(
                       item.quantity.toString(),
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: AppColors.blackColor,
+                            fontSize: 14 * fontScale,
                           ),
                     ),
                     IconButton(
-                      icon:
-                          Icon(Icons.add_circle, color: AppColors.primaryColor),
+                      icon: Icon(
+                        Icons.add_circle,
+                        color: AppColors.primaryColor,
+                        size: 20 * fontScale,
+                      ),
                       onPressed: () {
                         if (userId != null) {
                           cartController.updateQuantity(
                               userId, item.productId, item.quantity + 1);
                         }
                       },
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
                     ),
                   ],
                 ),
@@ -175,7 +226,11 @@ class BagScreen extends StatelessWidget {
             ),
           ),
           IconButton(
-            icon: Icon(Icons.delete, color: Colors.red[400]),
+            icon: Icon(
+              Icons.delete,
+              color: Colors.red[400],
+              size: 20 * fontScale,
+            ),
             onPressed: () {
               if (userId != null) {
                 cartController.removeItem(userId, item.productId);
@@ -188,13 +243,21 @@ class BagScreen extends StatelessWidget {
   }
 
   Widget _buildTotalAndUserInfoBox(
-      BuildContext context, CartController cartController, UserModel? user) {
+    BuildContext context,
+    CartController cartController,
+    UserModel? user,
+    Size screenSize,
+    double fontScale,
+  ) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.symmetric(
+        horizontal: screenSize.width * 0.04,
+        vertical: screenSize.height * 0.01,
+      ),
+      padding: EdgeInsets.all(screenSize.width * 0.04),
       decoration: BoxDecoration(
-        color: Colors.red[900], // Deep red background as in image
-        borderRadius: BorderRadius.circular(16),
+        color: Colors.red[900], // Deep red background
+        borderRadius: BorderRadius.circular(12),
       ),
       child: GetBuilder<CartController>(
         builder: (controller) {
@@ -208,7 +271,7 @@ class BagScreen extends StatelessWidget {
             children: [
               // User Info
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: EdgeInsets.all(screenSize.width * 0.02),
                 decoration: BoxDecoration(
                   color: AppColors.whiteColor,
                   borderRadius: BorderRadius.circular(8),
@@ -218,10 +281,13 @@ class BagScreen extends StatelessWidget {
                   children: [
                     Text(
                       user != null ? user.name.toUpperCase() : 'GUEST',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: AppColors.blackColor,
+                            fontSize: 14 * fontScale,
                           ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       user != null
@@ -229,102 +295,118 @@ class BagScreen extends StatelessWidget {
                           : 'Not logged in',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: AppColors.blackColor,
+                            fontSize: 12 * fontScale,
                           ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    const Divider(color: Colors.red, thickness: 1),
+                    Divider(color: Colors.red, thickness: 1),
                     Text(
                       'Wonder food location SIDI YAHIA',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: AppColors.blackColor,
+                            fontSize: 12 * fontScale,
                           ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: screenSize.height * 0.02),
               // Total Info
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'SUBTOTAL',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: AppColors.whiteColor,
                           fontWeight: FontWeight.bold,
+                          fontSize: 14 * fontScale,
                         ),
                   ),
                   Text(
                     '${subtotal.toInt()} DA',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: AppColors.whiteColor,
                           fontWeight: FontWeight.bold,
+                          fontSize: 14 * fontScale,
                         ),
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: screenSize.height * 0.01),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'Delivery',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: AppColors.whiteColor,
                           fontWeight: FontWeight.bold,
+                          fontSize: 14 * fontScale,
                         ),
                   ),
                   Text(
                     '${delivery.toInt()} DA',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: AppColors.whiteColor,
                           fontWeight: FontWeight.bold,
+                          fontSize: 14 * fontScale,
                         ),
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: screenSize.height * 0.01),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'Reward points',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: AppColors.whiteColor,
                           fontWeight: FontWeight.bold,
+                          fontSize: 14 * fontScale,
                         ),
                   ),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenSize.width * 0.02,
+                      vertical: screenSize.height * 0.005,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
                       '0 points',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: AppColors.blackColor,
+                            fontSize: 12 * fontScale,
                           ),
                     ),
                   ),
                 ],
               ),
-              const Divider(color: AppColors.whiteColor, thickness: 1),
+              Divider(color: AppColors.whiteColor, thickness: 1),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'TOTAL',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           color: AppColors.whiteColor,
                           fontWeight: FontWeight.bold,
+                          fontSize: 16 * fontScale,
                         ),
                   ),
                   Text(
                     '${total.toInt()} DA',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           color: AppColors.whiteColor,
                           fontWeight: FontWeight.bold,
+                          fontSize: 16 * fontScale,
                         ),
                   ),
                 ],
@@ -337,16 +419,19 @@ class BagScreen extends StatelessWidget {
   }
 
   Widget _buildCheckoutButton(
-      BuildContext context, CartController cartController, String? userId) {
+    BuildContext context,
+    CartController cartController,
+    String? userId,
+    Size screenSize,
+    double fontScale,
+  ) {
     return GetBuilder<CartController>(
       builder: (controller) => Container(
-        height: 60,
-        margin: const EdgeInsets.symmetric(horizontal: 16),
+        height: screenSize.height * 0.06, // Smaller height
+        margin: EdgeInsets.symmetric(horizontal: screenSize.width * 0.04),
         width: double.infinity,
         child: controller.isPlacingOrderLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
+            ? Center(child: CircularProgressIndicator())
             : ElevatedButton.icon(
                 onPressed: () {
                   if (userId == null) {
@@ -356,22 +441,29 @@ class BagScreen extends StatelessWidget {
                   if (cartController.cartItems.isEmpty) return;
                   cartController.placeOrder(userId);
                 },
-                icon:
-                    const Icon(Icons.check_circle, color: AppColors.whiteColor),
+                icon: Icon(
+                  Icons.check_circle,
+                  color: AppColors.whiteColor,
+                  size: 20 * fontScale,
+                ),
                 label: Text(
                   'Checkout',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: AppColors.whiteColor,
                         fontWeight: FontWeight.bold,
+                        fontSize: 14 * fontScale,
                       ),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: cartController.cartItems.isEmpty
                       ? Colors.grey
                       : AppColors.primaryColor,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  padding: EdgeInsets.symmetric(
+                    vertical: screenSize.height * 0.015,
+                    horizontal: screenSize.width * 0.04,
+                  ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   elevation: 2,
                 ),

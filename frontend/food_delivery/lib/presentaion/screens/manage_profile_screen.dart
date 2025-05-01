@@ -10,141 +10,179 @@ class ManageProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final fontScale = screenSize.width / 400; // Base scaling factor
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
         title: Text(
           'Manage Profile',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: AppColors.whiteColor,
                 fontWeight: FontWeight.bold,
+                fontSize: 16 * fontScale,
               ),
         ),
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(screenSize.width * 0.04),
         child: GetBuilder<ProfileController>(
           builder: (controller) => SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
-                  height: 60,
-                ),
+                SizedBox(height: screenSize.height * 0.04),
                 Container(
-                  padding: const EdgeInsets.all(2),
+                  padding: EdgeInsets.all(screenSize.width * 0.005),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.primaryColor,
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
+                    borderRadius: BorderRadius.circular(screenSize.width * 0.1),
                     child: Image.asset(
                       'assets/images/rania_avatar.png',
-                      width: 100,
-                      height: 100,
+                      width: screenSize.width * 0.2, // Smaller, responsive size
+                      height: screenSize.width * 0.2,
                       fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        width: screenSize.width * 0.2,
+                        height: screenSize.width * 0.2,
+                        color: Colors.grey[300],
+                        child: Icon(
+                          Icons.broken_image,
+                          size: 30 * fontScale,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 16,
-                ),
-
+                SizedBox(height: screenSize.height * 0.02),
                 Text(
-                  currentUser?.name ?? '',
-                  style: Theme.of(context).textTheme.titleLarge,
+                  currentUser?.name ?? 'Guest',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16 * fontScale,
+                      ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-
-                SizedBox(
-                  height: 30,
-                ),
+                SizedBox(height: screenSize.height * 0.04),
                 // Name Field
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Name',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,
+                            fontSize: 14 * fontScale,
                           ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: screenSize.height * 0.01),
                     TextField(
                       controller: controller.nameController,
                       decoration: InputDecoration(
                         hintText: 'Enter your name',
+                        hintStyle: TextStyle(fontSize: 12 * fontScale),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: screenSize.width * 0.04,
+                          vertical: screenSize.height * 0.015,
+                        ),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(color: AppColors.primaryColor),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                              color: AppColors.primaryColor, width: 2),
+                            color: AppColors.primaryColor,
+                            width: 1.5,
+                          ),
                         ),
                       ),
+                      style: TextStyle(fontSize: 14 * fontScale),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: screenSize.height * 0.02),
                     // Phone Field
                     Text(
                       'Phone',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,
+                            fontSize: 14 * fontScale,
                           ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: screenSize.height * 0.01),
                     TextField(
                       controller: controller.phoneController,
                       keyboardType: TextInputType.phone,
                       decoration: InputDecoration(
                         hintText: 'Enter your phone number',
+                        hintStyle: TextStyle(fontSize: 12 * fontScale),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: screenSize.width * 0.04,
+                          vertical: screenSize.height * 0.015,
+                        ),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(color: AppColors.primaryColor),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                              color: AppColors.primaryColor, width: 2),
+                            color: AppColors.primaryColor,
+                            width: 1.5,
+                          ),
                         ),
                       ),
+                      style: TextStyle(fontSize: 14 * fontScale),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: screenSize.height * 0.02),
                     // Email Field
                     Text(
                       'Email',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,
+                            fontSize: 14 * fontScale,
                           ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: screenSize.height * 0.01),
                     TextField(
                       controller: controller.emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         hintText: 'Enter your email',
+                        hintStyle: TextStyle(fontSize: 12 * fontScale),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: screenSize.width * 0.04,
+                          vertical: screenSize.height * 0.015,
+                        ),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(color: AppColors.primaryColor),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                              color: AppColors.primaryColor, width: 2),
+                            color: AppColors.primaryColor,
+                            width: 1.5,
+                          ),
                         ),
                       ),
+                      style: TextStyle(fontSize: 14 * fontScale),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: screenSize.height * 0.02),
                     // Gender Field
                     Text(
                       'Gender',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,
+                            fontSize: 14 * fontScale,
                           ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: screenSize.height * 0.01),
                     DropdownButtonFormField<String>(
                       value: controller.selectedGender,
                       onChanged: (value) {
@@ -153,48 +191,58 @@ class ManageProfileScreen extends StatelessWidget {
                       items: controller.genderOptions.map((gender) {
                         return DropdownMenuItem<String>(
                           value: gender,
-                          child: Text(gender),
+                          child: Text(
+                            gender,
+                            style: TextStyle(fontSize: 14 * fontScale),
+                          ),
                         );
                       }).toList(),
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: screenSize.width * 0.04,
+                          vertical: screenSize.height * 0.015,
+                        ),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(color: AppColors.primaryColor),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                              color: AppColors.primaryColor, width: 2),
+                            color: AppColors.primaryColor,
+                            width: 1.5,
+                          ),
                         ),
                       ),
+                      style: TextStyle(fontSize: 14 * fontScale),
                     ),
-                    const SizedBox(height: 32),
+                    SizedBox(height: screenSize.height * 0.04),
                     // Save Button
                     SizedBox(
                       width: double.infinity,
-                      height: 60,
+                      height: screenSize.height * 0.06, // Smaller height
                       child: controller.isUpdatingLoading
-                          ? Center(
-                              child: CircularProgressIndicator(),
-                            )
+                          ? Center(child: CircularProgressIndicator())
                           : ElevatedButton(
                               onPressed: controller.updateProfile,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primaryColor,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16),
+                                padding: EdgeInsets.symmetric(
+                                  vertical: screenSize.height * 0.015,
+                                ),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
                               child: Text(
                                 'Save Changes',
                                 style: Theme.of(context)
                                     .textTheme
-                                    .titleMedium
+                                    .bodyMedium
                                     ?.copyWith(
                                       color: AppColors.whiteColor,
                                       fontWeight: FontWeight.bold,
+                                      fontSize: 14 * fontScale,
                                     ),
                               ),
                             ),

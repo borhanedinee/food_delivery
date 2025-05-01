@@ -9,131 +9,161 @@ import 'package:food_delivery/utils/app_colors.dart';
 import 'package:get/get.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({Key? key});
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final fontScale = screenSize.width / 400; // Base scaling factor
+
     return SafeArea(
       child: Scaffold(
-          appBar: AppBar(
-            leading: SizedBox(),
-            title: const Text(
-              'Profile',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            centerTitle: true,
-            backgroundColor: AppColors.primaryColor,
-            elevation: 0,
+        appBar: AppBar(
+          leading: const SizedBox(),
+          title: Text(
+            'Profile',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.whiteColor,
+                  fontSize: 16 * fontScale,
+                ),
           ),
-          body: GetBuilder<ProfileController>(
-            builder: (controller) => Container(
-              width: size.width,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.primaryColor,
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Image.asset(
-                        'assets/images/rania_avatar.png',
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
+          centerTitle: true,
+          backgroundColor: AppColors.primaryColor,
+          elevation: 0,
+        ),
+        body: GetBuilder<ProfileController>(
+          builder: (controller) => Container(
+            width: screenSize.width,
+            padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.04),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(screenSize.width * 0.005),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.primaryColor,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(screenSize.width * 0.1),
+                    child: Image.asset(
+                      'assets/images/rania_avatar.png',
+                      width: screenSize.width * 0.2, // Smaller, responsive size
+                      height: screenSize.width * 0.2,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        width: screenSize.width * 0.2,
+                        height: screenSize.width * 0.2,
+                        color: Colors.grey[300],
+                        child: Icon(
+                          Icons.broken_image,
+                          size: 30 * fontScale,
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    currentUser?.name ?? '',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                ),
+                SizedBox(height: screenSize.height * 0.015),
+                Text(
+                  currentUser?.name ?? 'Guest',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16 * fontScale,
+                      ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: screenSize.height * 0.05),
+                // Profile tiles
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    List<Map> tilesInfos = [
+                      {
+                        'icon': Icons.person,
+                        'title': 'My Profile',
+                        'onTap': () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const ManageProfileScreen(),
+                            ),
+                          );
+                        }
+                      },
+                      {
+                        'icon': Icons.settings,
+                        'title': 'Settings',
+                        'onTap': () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const SettingsScreen(),
+                            ),
+                          );
+                        }
+                      },
+                      {
+                        'icon': Icons.logout,
+                        'title': 'Logout',
+                        'onTap': () {
+                          Get.find<AuthController>().logout();
+                        },
+                      },
+                    ];
 
-                  const SizedBox(
-                    height: 40,
+                    return _buildListTile(
+                      leading: Icon(
+                        tilesInfos[index]['icon'],
+                        color: AppColors.primaryColor,
+                        size: 24 * fontScale,
+                      ),
+                      title: tilesInfos[index]['title'],
+                      onTap: tilesInfos[index]['onTap'] ?? () {},
+                      context: context,
+                      fontScale: fontScale,
+                    );
+                  },
+                  separatorBuilder: (context, index) => Divider(
+                    height: screenSize.height * 0.01,
+                    thickness: 1,
+                    color: Colors.grey[300],
                   ),
-                  // profile tiles
-                  ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      List<Map> tilesInfos = [
-                        {
-                          'icon': Icons.person,
-                          'title': 'My Profile',
-                          'onTap': () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => ManageProfileScreen(),
-                              ),
-                            );
-                          }
-                        },
-                        {
-                          'icon': Icons.settings,
-                          'title': 'Settings',
-                          'onTap': () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => SettingsScreen(),
-                              ),
-                            );
-                          }
-                        },
-                        {
-                          'icon': Icons.logout,
-                          'title': 'Logout',
-                          'onTap': () {
-                            Get.find<AuthController>().logout();
-                          },
-                        },
-                      ];
-
-                      return _buildListTile(
-                          leading: Icon(
-                            tilesInfos[index]['icon'],
-                            color: AppColors.primaryColor,
-                            size: 30,
-                          ),
-                          title: tilesInfos[index]['title'],
-                          onTap: tilesInfos[index]['onTap'] ?? () {});
-                    },
-                    separatorBuilder: (context, index) => Divider(),
-                    itemCount: 3,
-                  )
-                ],
-              ),
+                  itemCount: 3,
+                ),
+              ],
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 
-  ListTile _buildListTile({
+  Widget _buildListTile({
     required Widget leading,
     required String title,
     required VoidCallback onTap,
+    required BuildContext context,
+    required double fontScale,
   }) {
     return ListTile(
       leading: leading,
-      title: Text(title),
-      trailing: const Icon(
+      title: Text(
+        title,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              fontSize: 14 * fontScale,
+              fontWeight: FontWeight.w600,
+            ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+      trailing: Icon(
         Icons.arrow_forward_ios,
         color: AppColors.primaryColor,
-        size: 18,
+        size: 16 * fontScale,
       ),
+      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       onTap: onTap,
     );
   }

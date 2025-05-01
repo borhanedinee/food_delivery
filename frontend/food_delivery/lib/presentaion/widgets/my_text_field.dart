@@ -14,7 +14,8 @@ class MyTextField extends StatelessWidget {
       this.obscureText,
       this.keyboardType,
       this.onChanged,
-      this.enabled});
+      this.enabled,
+      this.contentPadding});
   final ValueChanged<String>? onChanged;
   final bool? obscureText;
   final bool? enabled;
@@ -26,6 +27,7 @@ class MyTextField extends StatelessWidget {
   final Color? hintColor;
   final TextEditingController? controller;
   final TextInputType? keyboardType;
+  final EdgeInsetsGeometry? contentPadding;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -44,7 +46,8 @@ class MyTextField extends StatelessWidget {
         filled: true,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
-        contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        contentPadding:
+            contentPadding ?? EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         hintText: hintText,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),

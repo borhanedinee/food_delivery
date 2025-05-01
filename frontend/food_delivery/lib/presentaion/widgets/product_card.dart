@@ -14,6 +14,9 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final fontScale = screenSize.width / 400; // Base scaling factor for fonts
+
     return GestureDetector(
       onTap: () {
         product.name.toLowerCase() == 'crepe simple'
@@ -31,7 +34,7 @@ class ProductCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.primaryColor.withValues(alpha: 0.5),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(15), // Smaller radius
         ),
         child: Stack(
           children: [
@@ -43,30 +46,31 @@ class ProductCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppColors.primaryColor,
                     borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
+                      topLeft: Radius.circular(15),
+                      topRight: Radius.circular(15),
                     ),
                   ),
-                  height: MediaQuery.of(context).size.height *
-                      0.15, // Responsive height
-                  width: double.infinity, // Take full width of the card
+                  height:
+                      screenSize.height * 0.12, // Smaller, responsive height
+                  width: double.infinity,
                   child: ClipRRect(
                     borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(20)),
+                        const BorderRadius.vertical(top: Radius.circular(15)),
                     child: Image.network(
                       product.avatar,
-                      fit: BoxFit.cover, // Use cover to prevent stretching
+                      fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) => Container(
                         color: Colors.grey[300],
-                        child: const Icon(Icons.broken_image),
+                        child: const Icon(Icons.broken_image, size: 30),
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: screenSize.height * 0.005),
                 // Product Name and Price
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: screenSize.width * 0.02),
                   child: Row(
                     children: [
                       Expanded(
@@ -79,63 +83,66 @@ class ProductCard extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context)
                                   .textTheme
-                                  .titleMedium!
+                                  .titleSmall!
                                   .copyWith(
                                     color: AppColors.darkerPrimaryColor,
                                     fontWeight: FontWeight.bold,
+                                    fontSize: 14 * fontScale, // Responsive
                                   ),
                             ),
-                            const SizedBox(height: 4),
+                            SizedBox(height: screenSize.height * 0.005),
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 5,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: screenSize.width * 0.02,
+                                vertical: screenSize.height * 0.005,
                               ),
                               decoration: BoxDecoration(
                                 color: AppColors.primaryColor
                                     .withValues(alpha: 0.3),
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
                                 '${product.price.toInt()} DA',
                                 style: Theme.of(context)
                                     .textTheme
-                                    .bodyMedium!
+                                    .bodySmall!
                                     .copyWith(
                                       color: AppColors.darkerPrimaryColor,
                                       fontWeight: FontWeight.bold,
+                                      fontSize: 12 * fontScale,
                                     ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(width: 8),
                       Icon(
                         Icons.navigate_next,
                         color: AppColors.primaryColor,
-                        size: 20,
+                        size: 18 * fontScale,
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: screenSize.height * 0.005),
                 // Rating
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: screenSize.width * 0.02),
                   child: Row(
                     children: [
                       Icon(
                         Icons.star,
                         color: AppColors.primaryColor,
-                        size: 20,
+                        size: 16 * fontScale,
                       ),
-                      const SizedBox(width: 4),
+                      SizedBox(width: screenSize.width * 0.01),
                       Text(
                         product.rating.toString(),
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
                               color: AppColors.darkerPrimaryColor,
                               fontWeight: FontWeight.bold,
+                              fontSize: 12 * fontScale,
                             ),
                       ),
                     ],
@@ -144,24 +151,29 @@ class ProductCard extends StatelessWidget {
                 const Spacer(),
                 // Order Button
                 Container(
-                  width: double.infinity, // Take full width
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenSize.width * 0.02,
+                    vertical: screenSize.height * 0.005,
+                  ),
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryColor,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(8),
                       ),
+                      padding: EdgeInsets.symmetric(
+                          vertical: screenSize.height * 0.008),
                     ),
                     child: Text(
                       product.name.toLowerCase() == 'crepe simple'
                           ? 'Customize'
                           : 'Order Now',
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
                             color: AppColors.whiteColor,
                             fontWeight: FontWeight.bold,
+                            fontSize: 12 * fontScale,
                           ),
                     ),
                   ),
@@ -170,8 +182,8 @@ class ProductCard extends StatelessWidget {
             ),
             // Favorite Icon
             Positioned(
-              top: 10,
-              right: 10,
+              top: 8,
+              right: 8,
               child: Container(
                 decoration: BoxDecoration(
                   color: AppColors.whiteColor,
@@ -179,14 +191,18 @@ class ProductCard extends StatelessWidget {
                   boxShadow: [
                     BoxShadow(
                       color: AppColors.blackColor.withOpacity(0.2),
-                      blurRadius: 5,
-                      offset: const Offset(0, 5),
+                      blurRadius: 3,
+                      offset: const Offset(0, 3),
                     ),
                   ],
                 ),
                 child: IconButton(
                   onPressed: () {},
-                  icon: const Icon(Icons.favorite),
+                  icon: Icon(
+                    Icons.favorite,
+                    size: 16 * fontScale,
+                  ),
+                  padding: EdgeInsets.all(screenSize.width * 0.015),
                 ),
               ),
             ),
