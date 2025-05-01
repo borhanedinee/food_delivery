@@ -173,7 +173,7 @@ class _MenuScreenState extends State<MenuScreen> {
         crossAxisCount: 2,
         crossAxisSpacing: screenSize.width * 0.03,
         mainAxisSpacing: screenSize.width * 0.03,
-        childAspectRatio: 0.65, // Adjusted for smaller ProductCard
+        childAspectRatio: 0.6, // Adjusted for smaller ProductCard
       ),
       itemCount: products.length,
       itemBuilder: (context, index) {

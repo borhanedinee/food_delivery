@@ -47,7 +47,7 @@ class ProfileScreen extends StatelessWidget {
                     color: AppColors.primaryColor,
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(screenSize.width * 0.1),
+                    borderRadius: BorderRadius.circular(150),
                     child: Image.asset(
                       'assets/images/rania_avatar.png',
                       width:

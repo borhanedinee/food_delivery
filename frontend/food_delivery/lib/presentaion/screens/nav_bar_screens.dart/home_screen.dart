@@ -255,7 +255,7 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Popular Products',
+                  'New Products',
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(
                         fontWeight: FontWeight.bold,
                         fontSize: 16 * fontScale,
@@ -305,31 +305,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               Container(
                             color: Colors.grey[300],
                             child: const Icon(Icons.broken_image, size: 30),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 8,
-                        right: 8,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.whiteColor,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.blackColor.withOpacity(0.2),
-                                blurRadius: 3,
-                                offset: const Offset(0, 3),
-                              ),
-                            ],
-                          ),
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.favorite,
-                              size: 16 * fontScale,
-                            ),
-                            padding: EdgeInsets.all(screenSize.width * 0.015),
                           ),
                         ),
                       ),

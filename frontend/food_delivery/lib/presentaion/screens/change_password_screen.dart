@@ -89,7 +89,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               // Old Password Field
               Text(
                 'Old Password',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
@@ -98,6 +98,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 controller: oldPasswordController,
                 obscureText: !isOldPasswordVisible, // Toggle visibility
                 decoration: InputDecoration(
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                   hintText: 'Enter your old password',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -127,7 +129,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               // New Password Field
               Text(
                 'New Password',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
@@ -136,6 +138,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 controller: newPasswordController,
                 obscureText: !isNewPasswordVisible, // Toggle visibility
                 decoration: InputDecoration(
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                   hintText: 'Enter your new password',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -165,7 +169,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               // Confirm Password Field
               Text(
                 'Confirm New Password',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
@@ -174,6 +178,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 controller: confirmPasswordController,
                 obscureText: !isConfirmPasswordVisible, // Toggle visibility
                 decoration: InputDecoration(
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                   hintText: 'Confirm your new password',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
