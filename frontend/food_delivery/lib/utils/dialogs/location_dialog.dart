@@ -102,13 +102,9 @@ Future<void> showLocationSearchDialog(BuildContext context) async {
                               setState(() {
                                 searchResults = jsonDecode(response.body);
                               });
-                            } else {
-                              Get.snackbar(
-                                  'Error', 'Failed to fetch locations');
-                            }
+                            } else {}
                           } catch (e) {
-                            Get.snackbar(
-                                'Error', 'Failed to fetch locations: $e');
+                            print('error');
                           }
                         },
                       ),

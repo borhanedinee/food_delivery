@@ -189,58 +189,31 @@ class _MenuScreenState extends State<MenuScreen> {
         horizontal: screenSize.width * 0.04,
         vertical: screenSize.height * 0.01,
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.grey[300]!),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 5,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: MyTextField(
-                hintText: 'Search',
-                prefixIcon: Icon(
-                  LucideIcons.search,
-                  color: Colors.black,
-                  size: screenSize.width * 0.06, // Responsive icon size
-                ),
-                fillColor: Colors.white,
-                onChanged: (value) {
-                  // Optional: Add search functionality within the category
-                },
-              ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.grey[300]!),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 5,
+              offset: const Offset(0, 2),
             ),
+          ],
+        ),
+        child: MyTextField(
+          hintText: 'Search',
+          prefixIcon: Icon(
+            LucideIcons.search,
+            color: Colors.black,
+            size: screenSize.width * 0.06, // Responsive icon size
           ),
-          SizedBox(width: screenSize.width * 0.03),
-          Container(
-            padding: EdgeInsets.all(screenSize.width * 0.025),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.grey[300]!),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 5,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Icon(
-              LucideIcons.slidersHorizontal,
-              color: Colors.black,
-              size: screenSize.width * 0.06, // Responsive icon size
-            ),
-          ),
-        ],
+          fillColor: Colors.white,
+          onChanged: (value) {
+            // Optional: Add search functionality within the category
+          },
+        ),
       ),
     );
   }

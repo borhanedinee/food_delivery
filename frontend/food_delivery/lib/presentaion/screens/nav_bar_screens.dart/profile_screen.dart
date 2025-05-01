@@ -50,8 +50,9 @@ class ProfileScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(screenSize.width * 0.1),
                     child: Image.asset(
                       'assets/images/rania_avatar.png',
-                      width: screenSize.width * 0.2, // Smaller, responsive size
-                      height: screenSize.width * 0.2,
+                      width:
+                          screenSize.width * 0.35, // Smaller, responsive size
+                      height: screenSize.width * 0.35,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) => Container(
                         width: screenSize.width * 0.2,

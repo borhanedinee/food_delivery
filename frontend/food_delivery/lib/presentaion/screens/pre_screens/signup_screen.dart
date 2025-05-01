@@ -144,13 +144,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                 setState(() {
                                   searchResults = jsonDecode(response.body);
                                 });
-                              } else {
-                                Get.snackbar(
-                                    'Error', 'Failed to fetch locations');
-                              }
+                              } else {}
                             } catch (e) {
-                              Get.snackbar(
-                                  'Error', 'Failed to fetch locations: $e');
+                              print('something went wrong');
                             }
                           },
                         ),
@@ -402,10 +398,10 @@ class _SignupScreenState extends State<SignupScreen> {
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                             child: Text(
-                              'Create Account',
+                              'Create ',
                               style: Theme.of(context)
                                   .textTheme
-                                  .titleMedium
+                                  .bodySmall
                                   ?.copyWith(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,

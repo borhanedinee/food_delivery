@@ -39,7 +39,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         backgroundColor: AppColors.primaryColor,
         title: Text(
           'Change Password',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
                 color: AppColors.whiteColor,
                 fontWeight: FontWeight.bold,
               ),
@@ -63,7 +63,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   children: [
                     Text(
                       'New Password',
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
                             fontStyle: FontStyle.italic,
@@ -89,7 +89,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               // Old Password Field
               Text(
                 'Old Password',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
@@ -127,7 +127,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               // New Password Field
               Text(
                 'New Password',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
@@ -165,7 +165,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               // Confirm Password Field
               Text(
                 'Confirm New Password',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
@@ -234,7 +234,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                             'Save Changes',
                             style: Theme.of(context)
                                 .textTheme
-                                .titleMedium
+                                .titleSmall
                                 ?.copyWith(
                                   color: AppColors.whiteColor,
                                   fontWeight: FontWeight.bold,

@@ -33,7 +33,7 @@ class ProductCard extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.primaryColor.withValues(alpha: 0.5),
+          color: AppColors.primaryColor.withValues(alpha: 0.2),
           borderRadius: BorderRadius.circular(15), // Smaller radius
         ),
         child: Stack(
@@ -179,32 +179,6 @@ class ProductCard extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-            // Favorite Icon
-            Positioned(
-              top: 8,
-              right: 8,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppColors.whiteColor,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.blackColor.withOpacity(0.2),
-                      blurRadius: 3,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.favorite,
-                    size: 16 * fontScale,
-                  ),
-                  padding: EdgeInsets.all(screenSize.width * 0.015),
-                ),
-              ),
             ),
           ],
         ),

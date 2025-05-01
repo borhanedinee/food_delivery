@@ -139,62 +139,32 @@ class _HomeScreenState extends State<HomeScreen> {
           bottomRight: Radius.circular(20),
         ),
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              height: 40,
-              decoration: BoxDecoration(
-                color: AppColors.whiteColor,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: AppColors.whiteColor.withOpacity(0.2),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.blackColor.withOpacity(0.1),
-                    blurRadius: 3,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: MyTextField(
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 0, horizontal: 16),
-                hintText: 'Search products...',
-                prefixIcon: Icon(
-                  LucideIcons.search,
-                  color: Colors.black,
-                  size: 20 * fontScale,
-                ),
-                fillColor: AppColors.whiteColor,
-              ),
-            ),
+      child: Container(
+        height: 40,
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: AppColors.whiteColor.withOpacity(0.2),
           ),
-          SizedBox(width: screenSize.width * 0.03),
-          Container(
-            padding: EdgeInsets.all(screenSize.width * 0.02),
-            decoration: BoxDecoration(
-              color: AppColors.primaryColor,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: AppColors.whiteColor.withOpacity(0.2),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.blackColor.withOpacity(0.1),
-                  blurRadius: 3,
-                  offset: const Offset(0, 3),
-                ),
-              ],
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.blackColor.withOpacity(0.1),
+              blurRadius: 3,
+              offset: const Offset(0, 3),
             ),
-            child: Icon(
-              LucideIcons.slidersHorizontal,
-              color: Colors.white,
-              size: 20 * fontScale,
-            ),
+          ],
+        ),
+        child: MyTextField(
+          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+          hintText: 'Search products...',
+          prefixIcon: Icon(
+            LucideIcons.search,
+            color: Colors.black,
+            size: 20 * fontScale,
           ),
-        ],
+          fillColor: AppColors.whiteColor,
+        ),
       ),
     );
   }
