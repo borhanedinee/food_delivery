@@ -33,7 +33,7 @@ class ProductCard extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.primaryColor.withValues(alpha: 0.2),
+          color: AppColors.primaryColor.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(15), // Smaller radius
         ),
         child: Stack(

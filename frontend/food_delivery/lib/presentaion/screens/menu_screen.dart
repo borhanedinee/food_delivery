@@ -63,62 +63,67 @@ class _MenuScreenState extends State<MenuScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Vertical Categories on the Left
-                  Container(
-                    height: screenSize.height * .7,
-                    width: screenSize.width * 0.1, // Responsive width
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(100),
-                        bottomRight: Radius.circular(100),
+                  SingleChildScrollView(
+                    child: Container(
+                      height: screenSize.height * .7,
+                      width: screenSize.width * 0.1, // Responsive width
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(100),
+                          bottomRight: Radius.circular(100),
+                        ),
                       ),
-                    ),
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: categories
-                              .map((category) => GestureDetector(
-                                    onTap: () => _onCategoryTap(category),
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: screenSize.height * 0.02,
-                                      ),
-                                      child: RotatedBox(
-                                        quarterTurns: 3,
-                                        child: AnimatedContainer(
-                                          duration: Durations.extralong1,
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: screenSize.width * 0.04,
-                                            vertical: screenSize.height * 0.005,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(30),
-                                            color: selectedCategory == category
-                                                ? AppColors.primaryColor
-                                                    .withValues(alpha: 0.3)
-                                                : null,
-                                          ),
-                                          child: Text(
-                                            category.toUpperCase(),
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color:
-                                                  selectedCategory == category
-                                                      ? AppColors.primaryColor
-                                                      : Colors.black,
-                                              fontSize: screenSize.width *
-                                                  0.028, // Responsive
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: categories
+                                .map((category) => GestureDetector(
+                                      onTap: () => _onCategoryTap(category),
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: screenSize.height * 0.02,
+                                        ),
+                                        child: RotatedBox(
+                                          quarterTurns: 3,
+                                          child: AnimatedContainer(
+                                            duration: Durations.extralong1,
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal:
+                                                  screenSize.width * 0.04,
+                                              vertical:
+                                                  screenSize.height * 0.005,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                              color: selectedCategory ==
+                                                      category
+                                                  ? AppColors.primaryColor
+                                                      .withValues(alpha: 0.3)
+                                                  : null,
+                                            ),
+                                            child: Text(
+                                              category.toUpperCase(),
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color:
+                                                    selectedCategory == category
+                                                        ? AppColors.primaryColor
+                                                        : Colors.black,
+                                                fontSize: screenSize.width *
+                                                    0.028, // Responsive
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ))
-                              .toList(),
-                        );
-                      },
+                                    ))
+                                .toList(),
+                          );
+                        },
+                      ),
                     ),
                   ),
                   // Product Grid on the Right

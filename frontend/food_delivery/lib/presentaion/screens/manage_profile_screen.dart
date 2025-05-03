@@ -184,7 +184,7 @@ class ManageProfileScreen extends StatelessWidget {
                     ),
                     SizedBox(height: screenSize.height * 0.01),
                     DropdownButtonFormField<String>(
-                      value: controller.selectedGender,
+                      value: controller.selectedGender ?? 'Female',
                       onChanged: (value) {
                         controller.updateGender(value!);
                       },
@@ -193,7 +193,8 @@ class ManageProfileScreen extends StatelessWidget {
                           value: gender,
                           child: Text(
                             gender,
-                            style: TextStyle(fontSize: 14 * fontScale),
+                            style: TextStyle(
+                                fontSize: 14 * fontScale, color: Colors.black),
                           ),
                         );
                       }).toList(),

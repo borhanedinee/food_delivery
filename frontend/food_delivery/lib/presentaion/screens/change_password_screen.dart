@@ -101,6 +101,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                   hintText: 'Enter your old password',
+                  hintStyle: TextStyle(
+                    fontSize: 13,
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(color: AppColors.primaryColor),
@@ -141,6 +144,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                   hintText: 'Enter your new password',
+                  hintStyle: TextStyle(
+                    fontSize: 13,
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(color: AppColors.primaryColor),
@@ -181,6 +187,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                   hintText: 'Confirm your new password',
+                  hintStyle: TextStyle(
+                    fontSize: 13,
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(color: AppColors.primaryColor),
